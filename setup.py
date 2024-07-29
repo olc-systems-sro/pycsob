@@ -1,7 +1,6 @@
 import sys
 from os.path import join, dirname
 from setuptools import setup
-from setuptools.command.test import test
 
 import pycsob
 
@@ -17,24 +16,10 @@ def parse_reqs(f="requirements.pip"):
 
 
 setup_requires = ["setuptools"]
-install_requires, tests_require = parse_reqs(), parse_reqs("requirements-test.pip")
+install_requires = parse_reqs()
 
 with open("README.rst") as readme_file:
     long_description = readme_file.read()
-
-
-class PyTest(test):
-    def finalize_options(self):
-        test.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-
-        errno = pytest.main(self.test_args)
-        sys.exit(errno)
 
 
 setup(
@@ -46,7 +31,7 @@ setup(
     author_email="devs@twisto.cz",
     license="MIT",
     url="https://github.com/TwistoPayments/pycsob",
-    packages=["pycsob", "tests_pycsob"],
+    packages=["pycsob"],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -59,6 +44,4 @@ setup(
     zip_safe=False,
     setup_requires=setup_requires,
     install_requires=install_requires,
-    tests_require=tests_require,
-    cmdclass={"test": PyTest},
 )
